@@ -121,7 +121,7 @@ class EnterBudget extends React.Component {
       <div>
         <form onSubmit={this.handleAddBudget}>
           <label>Enter Budget</label>
-          <input type="number" name="budget" placeholder="$" />
+          <input type="number" name="budget" min="1" placeholder="$" />
           <button>Submit</button>
         </form>
       </div>
@@ -177,7 +177,7 @@ class AddExpense extends React.Component {
         <h3>Add an Expense</h3>
         <form onSubmit={this.handleAddExpense}>
           <input type="text" name="name" placeholder="Expense Name"/>
-          <input type="number" name="cost" placeholder="$"/>
+          <input type="number" name="cost" min="1" placeholder="$"/>
           <button >Add</button>
         </form>
       </div>
