@@ -35,8 +35,12 @@ class BudgetApp extends React.Component {
     }));
   }
 // handleDeleteExpense =====================================
-  handleDeleteExpense() {
-    //todo
+  handleDeleteExpense(expenseToRemove) {
+    this.setState(prevState => ({
+      expenseList : prevState.expenseList.filter(expense => {
+        return expenseToRemove.name !== expense.name && expenseToRemove.cost !== expense.cost
+      })
+    }));
   }
 
 // handleAddBudget =========================================
@@ -71,7 +75,10 @@ class BudgetApp extends React.Component {
         <AddExpense
            handleAddExpense={this.handleAddExpense}
         />
-        <Expenses expenseList={this.state.expenseList} />
+        <Expenses
+          expenseList={this.state.expenseList}
+          handleDeleteExpense={this.handleDeleteExpense}
+        />
       </div>
     );
   }
@@ -153,7 +160,8 @@ class AddExpense extends React.Component {
     const name = e.target.elements.name.value.trim()
     const cost = e.target.elements.cost.value
     this.props.handleAddExpense({ name , cost });
-
+    e.target.elements.name.value=''
+    e.target.elements.cost.value=''
   }
   render() {
     return (
@@ -180,6 +188,7 @@ const Expenses = (props) => {
             key= {expense.name}
             expenseName = {expense.name}
             expenseCost = {expense.cost}
+            handleDeleteExpense={props.handleDeleteExpense}
           />
         ))
       }
@@ -195,7 +204,9 @@ const Expense = (props) => {
         <tr>
           <td class="expense-name">{props.expenseName}</td>
           <td class="expense-cost">$ {props.expenseCost}</td>
-          <td class="expense-remove"><button>Remove</button></td>
+          <td class="expense-remove" onClick={(e) => {
+            props.handleDeleteExpense({name : props.expenseName, cost : props.expenseCost})
+          }}><button>Remove</button></td>
         </tr>
       </table>
     </div>

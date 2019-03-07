@@ -62,9 +62,15 @@ var BudgetApp = function (_React$Component) {
 
   }, {
     key: "handleDeleteExpense",
-    value: function handleDeleteExpense() {}
-    //todo
-
+    value: function handleDeleteExpense(expenseToRemove) {
+      this.setState(function (prevState) {
+        return {
+          expenseList: prevState.expenseList.filter(function (expense) {
+            return expenseToRemove.name !== expense.name && expenseToRemove.cost !== expense.cost;
+          })
+        };
+      });
+    }
 
     // handleAddBudget =========================================
 
@@ -108,7 +114,10 @@ var BudgetApp = function (_React$Component) {
         React.createElement(AddExpense, {
           handleAddExpense: this.handleAddExpense
         }),
-        React.createElement(Expenses, { expenseList: this.state.expenseList })
+        React.createElement(Expenses, {
+          expenseList: this.state.expenseList,
+          handleDeleteExpense: this.handleDeleteExpense
+        })
       );
     }
   }]);
@@ -266,6 +275,8 @@ var AddExpense = function (_React$Component4) {
       var name = e.target.elements.name.value.trim();
       var cost = e.target.elements.cost.value;
       this.props.handleAddExpense({ name: name, cost: cost });
+      e.target.elements.name.value = '';
+      e.target.elements.cost.value = '';
     }
   }, {
     key: "render",
@@ -312,7 +323,8 @@ var Expenses = function Expenses(props) {
       return React.createElement(Expense, {
         key: expense.name,
         expenseName: expense.name,
-        expenseCost: expense.cost
+        expenseCost: expense.cost,
+        handleDeleteExpense: props.handleDeleteExpense
       });
     })
   );
@@ -342,7 +354,9 @@ var Expense = function Expense(props) {
         ),
         React.createElement(
           "td",
-          { "class": "expense-remove" },
+          { "class": "expense-remove", onClick: function onClick(e) {
+              props.handleDeleteExpense({ name: props.expenseName, cost: props.expenseCost });
+            } },
           React.createElement(
             "button",
             null,
