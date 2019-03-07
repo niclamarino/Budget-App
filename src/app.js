@@ -5,6 +5,7 @@ class BudgetApp extends React.Component {
     this.handleDeleteExpense = this.handleDeleteExpense.bind(this)
     this.handleAddBudget = this.handleAddBudget.bind(this)
     this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
+    this.subtractExpenseFromBudget = this.subtractExpenseFromBudget.bind(this)
     this.state = {
       totalExpenses : 0,
       expenseList : [
@@ -31,16 +32,20 @@ class BudgetApp extends React.Component {
 // handleAddExpense ========================================
   handleAddExpense(expense) {
     this.setState((prevState) => ({
-      expenseList : prevState.expenseList.concat(expense)
+      expenseList : prevState.expenseList.concat(expense),
+      totalBudget : parseInt(this.state.totalBudget) - parseInt(expense.cost)
     }));
+
   }
 // handleDeleteExpense =====================================
   handleDeleteExpense(expenseToRemove) {
     this.setState(prevState => ({
       expenseList : prevState.expenseList.filter(expense => {
         return expenseToRemove.name !== expense.name && expenseToRemove.cost !== expense.cost
-      })
+      }),
+      totalBudget : parseInt(prevState.totalBudget) + parseInt(expenseToRemove.cost)
     }));
+
   }
 
 // handleAddBudget =========================================
@@ -53,13 +58,16 @@ class BudgetApp extends React.Component {
 
 // handleAddBudget =========================================
   handleAdjustBudget(amount) {
-    const prev = parseInt(this.state.totalBudget);
-    const add = parseInt(amount);
     this.setState(() => {
       return {
-        totalBudget : prev + add
+        totalBudget : parseInt(this.state.totalBudget) + parseInt(amount)
       }
     });
+  }
+
+// subtractExpenseFromBudget ===============================
+  subtractExpenseFromBudget(costToSubtract) {
+    //todo
   }
 
 // render ==================================================
@@ -203,7 +211,7 @@ const Expense = (props) => {
       <table class="expense">
         <tr>
           <td class="expense-name">{props.expenseName}</td>
-          <td class="expense-cost">$ {props.expenseCost}</td>
+          <td class="expense-cost">${props.expenseCost}</td>
           <td class="expense-remove" onClick={(e) => {
             props.handleDeleteExpense({name : props.expenseName, cost : props.expenseCost})
           }}><button>Remove</button></td>
