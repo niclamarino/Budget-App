@@ -4,6 +4,7 @@ class BudgetApp extends React.Component {
     this.handleAddExpense = this.handleAddExpense.bind(this)
     this.handleDeleteExpense = this.handleDeleteExpense.bind(this)
     this.handleAddBudget = this.handleAddBudget.bind(this)
+    this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
     this.state = {
       totalExpenses : 0,
       expenseList : [
@@ -46,6 +47,17 @@ class BudgetApp extends React.Component {
     // todo -value error
   }
 
+// handleAddBudget =========================================
+  handleAdjustBudget(amount) {
+    const prev = parseInt(this.state.totalBudget);
+    const add = parseInt(amount);
+    this.setState(() => {
+      return {
+        totalBudget : prev + add
+      }
+    });
+  }
+
 // render ==================================================
   render() {
     return (
@@ -53,7 +65,9 @@ class BudgetApp extends React.Component {
         <Header
           totalBudget={this.state.totalBudget}    totalExpenses={this.state.totalExpenses}
         />
-        <EnterBudget handleAddBudget={this.handleAddBudget}/>
+        {
+          this.state.totalBudget === 0 ? <EnterBudget handleAddBudget={this.handleAddBudget}/> : <AdjustBudget handleAdjustBudget={this.handleAdjustBudget}/>
+        }
         <AddExpense
            handleAddExpense={this.handleAddExpense}
         />
@@ -85,6 +99,7 @@ class EnterBudget extends React.Component {
     const budget = e.target.elements.budget.value
     //todo error handling
     this.props.handleAddBudget(budget);
+    e.target.elements.budget.value=''
   }
   render() {
     return (
@@ -92,6 +107,31 @@ class EnterBudget extends React.Component {
         <form onSubmit={this.handleAddBudget}>
           <label>Enter Budget</label>
           <input type="number" name="budget" placeholder="$" />
+          <button>Submit</button>
+        </form>
+      </div>
+    );
+  }
+}
+
+// AdjustBudget =====================================
+class AdjustBudget extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
+  }
+  handleAdjustBudget(e) {
+    e.preventDefault();
+    const amount = e.target.elements.adjustment.value;
+    this.props.handleAdjustBudget(amount);
+    e.target.elements.adjustment.value=''
+  }
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleAdjustBudget}>
+          <label>Add to or Subtract from Budget</label>
+          <input type="number" name="adjustment" placeholder="+/-" />
           <button>Submit</button>
         </form>
       </div>
