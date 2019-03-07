@@ -18,6 +18,7 @@ var BudgetApp = function (_React$Component) {
 
     _this.handleAddExpense = _this.handleAddExpense.bind(_this);
     _this.handleDeleteExpense = _this.handleDeleteExpense.bind(_this);
+    _this.handleAddBudget = _this.handleAddBudget.bind(_this);
     _this.state = {
       totalExpenses: 0,
       expenseList: [{ name: "Adopt a puppy", cost: 500 }, { name: "Dog Food", cost: 50 }, { name: "Dog Leash", cost: 20 }, { name: "Dog Bowls", cost: 15 }],
@@ -25,6 +26,8 @@ var BudgetApp = function (_React$Component) {
     };
     return _this;
   }
+  // lifecycle hooks ==========================================
+
 
   _createClass(BudgetApp, [{
     key: "componentDidMount",
@@ -43,6 +46,8 @@ var BudgetApp = function (_React$Component) {
     value: function componentWillUnmount() {
       console.log('componentWillUnmount');
     }
+    // handleAddExpense ========================================
+
   }, {
     key: "handleAddExpense",
     value: function handleAddExpense(expense) {
@@ -52,11 +57,29 @@ var BudgetApp = function (_React$Component) {
         };
       });
     }
+    // handleDeleteExpense =====================================
+
   }, {
     key: "handleDeleteExpense",
-    value: function handleDeleteExpense() {
-      //todo
+    value: function handleDeleteExpense() {}
+    //todo
+
+
+    // handleAddBudget =========================================
+
+  }, {
+    key: "handleAddBudget",
+    value: function handleAddBudget(budget) {
+      if (parseInt(budget) > 0) {
+        this.setState(function () {
+          return { totalBudget: budget };
+        });
+      }
+      // todo -value error
     }
+
+    // render ==================================================
+
   }, {
     key: "render",
     value: function render() {
@@ -66,9 +89,9 @@ var BudgetApp = function (_React$Component) {
         React.createElement(Header, {
           totalBudget: this.state.totalBudget, totalExpenses: this.state.totalExpenses
         }),
-        React.createElement(AddExpense
-        // expenseList={this.state.expenseList}
-        , { handleAddExpense: this.handleAddExpense
+        React.createElement(EnterBudget, { handleAddBudget: this.handleAddBudget }),
+        React.createElement(AddExpense, {
+          handleAddExpense: this.handleAddExpense
         }),
         React.createElement(Expenses, { expenseList: this.state.expenseList })
       );
@@ -77,6 +100,9 @@ var BudgetApp = function (_React$Component) {
 
   return BudgetApp;
 }(React.Component);
+
+// Header ==========================================
+
 
 var Header = function Header(props) {
   return React.createElement(
@@ -97,19 +123,73 @@ var Header = function Header(props) {
   );
 };
 
-var AddExpense = function (_React$Component2) {
-  _inherits(AddExpense, _React$Component2);
+// EnterBudget =====================================
+
+var EnterBudget = function (_React$Component2) {
+  _inherits(EnterBudget, _React$Component2);
+
+  function EnterBudget(props) {
+    _classCallCheck(this, EnterBudget);
+
+    var _this2 = _possibleConstructorReturn(this, (EnterBudget.__proto__ || Object.getPrototypeOf(EnterBudget)).call(this, props));
+
+    _this2.handleAddBudget = _this2.handleAddBudget.bind(_this2);
+    //todo error state
+    return _this2;
+  }
+
+  _createClass(EnterBudget, [{
+    key: "handleAddBudget",
+    value: function handleAddBudget(e) {
+      e.preventDefault();
+      var budget = e.target.elements.budget.value;
+      //todo error handling
+      this.props.handleAddBudget(budget);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return React.createElement(
+        "div",
+        null,
+        React.createElement(
+          "form",
+          { onSubmit: this.handleAddBudget },
+          React.createElement(
+            "label",
+            null,
+            "Enter Budget"
+          ),
+          React.createElement("input", { type: "number", name: "budget", placeholder: "$" }),
+          React.createElement(
+            "button",
+            null,
+            "Submit"
+          )
+        )
+      );
+    }
+  }]);
+
+  return EnterBudget;
+}(React.Component);
+
+// AddExpense ======================================
+
+
+var AddExpense = function (_React$Component3) {
+  _inherits(AddExpense, _React$Component3);
 
   function AddExpense(props) {
     _classCallCheck(this, AddExpense);
 
-    var _this2 = _possibleConstructorReturn(this, (AddExpense.__proto__ || Object.getPrototypeOf(AddExpense)).call(this, props));
+    var _this3 = _possibleConstructorReturn(this, (AddExpense.__proto__ || Object.getPrototypeOf(AddExpense)).call(this, props));
 
-    _this2.handleAddExpense = _this2.handleAddExpense.bind(_this2);
-    _this2.state = {
+    _this3.handleAddExpense = _this3.handleAddExpense.bind(_this3);
+    _this3.state = {
       error: undefined
     };
-    return _this2;
+    return _this3;
   }
 
   _createClass(AddExpense, [{
@@ -123,8 +203,7 @@ var AddExpense = function (_React$Component2) {
   }, {
     key: "render",
     value: function render() {
-      var style = { background: "#daffdc" //todo remove --temporary bc chrome devtools doesn't show outlines for me
-      };return React.createElement(
+      return React.createElement(
         "div",
         null,
         React.createElement(
@@ -135,11 +214,11 @@ var AddExpense = function (_React$Component2) {
         React.createElement(
           "form",
           { onSubmit: this.handleAddExpense },
-          React.createElement("input", { style: style, type: "text", name: "name", placeholder: "Expense Name" }),
-          React.createElement("input", { style: style, type: "number", name: "cost", placeholder: "$" }),
+          React.createElement("input", { type: "text", name: "name", placeholder: "Expense Name" }),
+          React.createElement("input", { type: "number", name: "cost", placeholder: "$" }),
           React.createElement(
             "button",
-            { style: style },
+            null,
             "Add"
           )
         )
@@ -149,6 +228,9 @@ var AddExpense = function (_React$Component2) {
 
   return AddExpense;
 }(React.Component);
+
+// Expenses ========================================
+
 
 var Expenses = function Expenses(props) {
   return React.createElement(
@@ -169,6 +251,7 @@ var Expenses = function Expenses(props) {
   );
 };
 
+// Expense ==========================================
 var Expense = function Expense(props) {
   return React.createElement(
     "div",

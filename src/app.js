@@ -3,6 +3,7 @@ class BudgetApp extends React.Component {
     super(props)
     this.handleAddExpense = this.handleAddExpense.bind(this)
     this.handleDeleteExpense = this.handleDeleteExpense.bind(this)
+    this.handleAddBudget = this.handleAddBudget.bind(this)
     this.state = {
       totalExpenses : 0,
       expenseList : [
@@ -14,6 +15,7 @@ class BudgetApp extends React.Component {
       totalBudget : 0
     };
   }
+// lifecycle hooks ==========================================
   componentDidMount() {
     //todo
     console.log('componentDidMount');
@@ -25,22 +27,34 @@ class BudgetApp extends React.Component {
   componentWillUnmount() {
     console.log('componentWillUnmount');
   }
+// handleAddExpense ========================================
   handleAddExpense(expense) {
     this.setState((prevState) => ({
       expenseList : prevState.expenseList.concat(expense)
     }));
   }
+// handleDeleteExpense =====================================
   handleDeleteExpense() {
     //todo
   }
+
+// handleAddBudget =========================================
+  handleAddBudget(budget) {
+    if (parseInt(budget) > 0) {
+      this.setState(() => ({ totalBudget : budget }));
+    }
+    // todo -value error
+  }
+
+// render ==================================================
   render() {
     return (
       <div className="container">
         <Header
           totalBudget={this.state.totalBudget}    totalExpenses={this.state.totalExpenses}
         />
+        <EnterBudget handleAddBudget={this.handleAddBudget}/>
         <AddExpense
-           // expenseList={this.state.expenseList}
            handleAddExpense={this.handleAddExpense}
         />
         <Expenses expenseList={this.state.expenseList} />
@@ -49,6 +63,7 @@ class BudgetApp extends React.Component {
   }
 }
 
+// Header ==========================================
 const Header = (props) => {
   return (
     <header>
@@ -58,6 +73,33 @@ const Header = (props) => {
   );
 };
 
+// EnterBudget =====================================
+class EnterBudget extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleAddBudget = this.handleAddBudget.bind(this)
+    //todo error state
+  }
+  handleAddBudget(e) {
+    e.preventDefault();
+    const budget = e.target.elements.budget.value
+    //todo error handling
+    this.props.handleAddBudget(budget);
+  }
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleAddBudget}>
+          <label>Enter Budget</label>
+          <input type="number" name="budget" placeholder="$" />
+          <button>Submit</button>
+        </form>
+      </div>
+    );
+  }
+}
+
+// AddExpense ======================================
 class AddExpense extends React.Component {
   constructor(props) {
     super(props)
@@ -74,20 +116,20 @@ class AddExpense extends React.Component {
 
   }
   render() {
-    const style={background: "#daffdc"} //todo remove --temporary bc chrome devtools doesn't show outlines for me
     return (
       <div>
         <h3>Add an Expense</h3>
         <form onSubmit={this.handleAddExpense}>
-          <input  style={style} type="text" name="name" placeholder="Expense Name"/>
-          <input  style={style} type="number" name="cost" placeholder="$"/>
-          <button style={style} >Add</button>
+          <input type="text" name="name" placeholder="Expense Name"/>
+          <input type="number" name="cost" placeholder="$"/>
+          <button >Add</button>
         </form>
       </div>
     );
   }
 }
 
+// Expenses ========================================
 const Expenses = (props) => {
   return (
     <section id="expenses">
@@ -105,6 +147,7 @@ const Expenses = (props) => {
   );
 };
 
+// Expense ==========================================
 const Expense = (props) => {
   return (
     <div>
