@@ -9,10 +9,10 @@ class BudgetApp extends React.Component {
     this.state = {
       totalExpenses : 0,
       expenseList : [
-        // {name : "Adopt a puppy",cost : 500},
-        // {name : "Dog Food",cost : 50},
-        // {name : "Dog Leash",cost : 20},
-        // {name : "Dog Bowls",cost : 15}
+        {name : "Adopt a puppy",cost : 500},
+        {name : "Dog Food",cost : 50},
+        {name : "Dog Leash",cost : 20},
+        {name : "Dog Bowls",cost : 15}
       ],
       totalBudget : 0
     };
@@ -33,7 +33,8 @@ class BudgetApp extends React.Component {
   handleAddExpense(expense) {
     this.setState((prevState) => ({
       expenseList : prevState.expenseList.concat(expense),
-      totalBudget : parseInt(this.state.totalBudget) - parseInt(expense.cost)
+      totalBudget : parseInt(this.state.totalBudget) - parseInt(expense.cost),
+      totalExpenses : parseInt(this.state.totalExpenses) + parseInt(expense.cost)
     }));
 
   }
@@ -43,7 +44,8 @@ class BudgetApp extends React.Component {
       expenseList : prevState.expenseList.filter(expense => {
         return expenseToRemove.name !== expense.name && expenseToRemove.cost !== expense.cost
       }),
-      totalBudget : parseInt(prevState.totalBudget) + parseInt(expenseToRemove.cost)
+      totalBudget : parseInt(prevState.totalBudget) + parseInt(expenseToRemove.cost),
+      totalExpenses : parseInt(prevState.totalExpenses) - parseInt(expenseToRemove.cost)
     }));
 
   }
@@ -99,8 +101,11 @@ const Header = (props) => {
           <EnterBudget
             handleAddBudget={props.handleAddBudget}
             handleAdjustBudget={props.handleAdjustBudget}
+            totalBudget={props.totalBudget}
           />
-          <AddExpense handleAddExpense={props.handleAddExpense} />
+          <AddExpense
+            handleAddExpense={props.handleAddExpense}
+          />
         </div>
         <div className="header-right">
           <h1 >Budget: ${props.totalBudget}</h1>
@@ -127,14 +132,14 @@ class EnterBudget extends React.Component {
     const budget = e.target.elements.budget.value
     //todo error handling
     this.props.handleAddBudget(budget);
-    e.target.elements.budget.value=''
-    this.setState(() => ({ hasBudget : true }));
+    e.target.elements.budget.value='';
+    this.setState(() => ({ hasBudget: true }));
   }
   handleAdjustBudget(e) {
     e.preventDefault();
     const amount = e.target.elements.adjustment.value;
     this.props.handleAdjustBudget(amount);
-    e.target.elements.adjustment.value=''
+    e.target.elements.adjustment.value='';
   }
   render() {
     return (
