@@ -23,21 +23,33 @@
       margin: 0 10px;
     }
 
-    .expense-cost {
-      border-right: 0 !important;
+    .table { width: 100%; max-width: 600px; margin: 0 auto; }
+
+    .table td {
+      padding: 0;
+      vertical-align: middle;
     }
 
-    .expense-remove {
-      padding: 0 !important;
-      border-left: 0 !important;
+    td.expense-name,
+    td.expense-cost {
+      padding: 0 5px;
     }
+
+    td.expense-edit-btn { width: 60px }
+    td.expense-remove-btn { width: 70px; }
 
     .btn-danger,
     .btn-secondary {
       border: 0;
       border-radius: 0;
+      width: 100%;
     }
 
+    #empty-expense-list-msg {
+      font-size: 1.4em;
+      color: #920303;
+      font-style: italic;
+    }
 
   </style>
   <body>

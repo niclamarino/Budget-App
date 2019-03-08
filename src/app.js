@@ -9,10 +9,10 @@ class BudgetApp extends React.Component {
     this.state = {
       totalExpenses : 0,
       expenseList : [
-        {name : "Adopt a puppy",cost : 500},
-        {name : "Dog Food",cost : 50},
-        {name : "Dog Leash",cost : 20},
-        {name : "Dog Bowls",cost : 15}
+        // {name : "Adopt a puppy",cost : 500},
+        // {name : "Dog Food",cost : 50},
+        // {name : "Dog Leash",cost : 20},
+        // {name : "Dog Bowls",cost : 15}
       ],
       totalBudget : 0
     };
@@ -190,21 +190,23 @@ const Expenses = (props) => {
   return (
     <section id="expenses" className="container">
       <h2 className="text-center text-muted">Expenses</h2>
-      {/* <table class="expense table table-sm table-striped table-bordered table-hover"> */}
-      <table className="expense table table-striped table-bordered table-hover">
-        <tbody>
-          {
-            props.expenseList.map((expense) => (
-              <Expense
-                key= {expense.name}
-                expenseName = {expense.name}
-                expenseCost = {expense.cost}
-                handleDeleteExpense={props.handleDeleteExpense}
-              />
-            ))
-          }
-        </tbody>
-      </table>
+      {
+        props.expenseList.length>0 ? <table className="expense table table-striped table-bordered table-hover">
+          <tbody>
+            {
+              props.expenseList.map((expense) => (
+                <Expense
+                  key= {expense.name}
+                  expenseName = {expense.name}
+                  expenseCost = {expense.cost}
+                  handleDeleteExpense={props.handleDeleteExpense}
+                />
+              ))
+            }
+          </tbody>
+        </table>
+        : <p id="empty-expense-list-msg" className="text-center">No expenses to show.</p>
+      }
     </section>
   );
 };
