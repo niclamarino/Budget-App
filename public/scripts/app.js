@@ -152,27 +152,31 @@ var Header = function Header(props) {
     null,
     React.createElement(
       'div',
-      null,
-      React.createElement(EnterBudget, {
-        handleAddBudget: props.handleAddBudget,
-        handleAdjustBudget: props.handleAdjustBudget
-      }),
-      React.createElement(AddExpense, { handleAddExpense: props.handleAddExpense })
-    ),
-    React.createElement(
-      'div',
-      null,
+      { className: 'container' },
       React.createElement(
-        'h1',
-        null,
-        'Budget: $',
-        props.totalBudget
+        'div',
+        { className: 'header-left' },
+        React.createElement(EnterBudget, {
+          handleAddBudget: props.handleAddBudget,
+          handleAdjustBudget: props.handleAdjustBudget
+        }),
+        React.createElement(AddExpense, { handleAddExpense: props.handleAddExpense })
       ),
       React.createElement(
-        'h2',
-        null,
-        'Total Expenses: $',
-        props.totalExpenses
+        'div',
+        { className: 'header-right' },
+        React.createElement(
+          'h1',
+          null,
+          'Budget: $',
+          props.totalBudget
+        ),
+        React.createElement(
+          'h2',
+          null,
+          'Total Expenses: $',
+          props.totalExpenses
+        )
       )
     )
   );
@@ -220,35 +224,43 @@ var EnterBudget = function (_React$Component2) {
     key: 'render',
     value: function render() {
       return React.createElement(
-        'section',
-        { 'class': 'enter-budget' },
+        'div',
+        null,
         this.state.hasBudget ? React.createElement(
           'form',
           { onSubmit: this.handleAdjustBudget },
           React.createElement(
-            'label',
+            'div',
             null,
-            'Add to or Subtract from Budget'
-          ),
-          React.createElement('input', { type: 'number', name: 'adjustment', placeholder: '+/-' }),
-          React.createElement(
-            'button',
-            null,
-            'Submit'
+            React.createElement(
+              'label',
+              null,
+              'Add to or Subtract from Budget'
+            ),
+            React.createElement('input', { className: 'cost-input', type: 'number', name: 'adjustment', placeholder: '+/-' }),
+            React.createElement(
+              'button',
+              { className: 'btn btn-dark' },
+              'Submit'
+            )
           )
         ) : React.createElement(
           'form',
           { onSubmit: this.handleAddBudget },
           React.createElement(
-            'label',
+            'div',
             null,
-            'Enter Budget'
-          ),
-          React.createElement('input', { type: 'number', name: 'budget', min: '1', placeholder: '$' }),
-          React.createElement(
-            'button',
-            null,
-            'Submit'
+            React.createElement(
+              'label',
+              null,
+              'Enter Budget'
+            ),
+            React.createElement('input', { className: 'cost-input', type: 'number', name: 'budget', min: '1', placeholder: '$' }),
+            React.createElement(
+              'button',
+              { className: 'btn btn-dark' },
+              'Submit'
+            )
           )
         )
       );
@@ -290,22 +302,26 @@ var AddExpense = function (_React$Component3) {
     key: 'render',
     value: function render() {
       return React.createElement(
-        'section',
+        'div',
         { className: 'add-expense' },
-        React.createElement(
-          'h3',
-          null,
-          'Add an Expense'
-        ),
         React.createElement(
           'form',
           { onSubmit: this.handleAddExpense },
-          React.createElement('input', { type: 'text', name: 'name', placeholder: 'Expense Name' }),
-          React.createElement('input', { type: 'number', name: 'cost', min: '1', placeholder: '$' }),
           React.createElement(
-            'button',
+            'div',
             null,
-            'Add'
+            React.createElement(
+              'label',
+              null,
+              'Add an Expense'
+            ),
+            React.createElement('input', { type: 'text', name: 'name', placeholder: 'Expense Name' }),
+            React.createElement('input', { className: 'cost-input', type: 'number', name: 'cost', min: '1', placeholder: '$' }),
+            React.createElement(
+              'button',
+              { className: 'btn btn-dark' },
+              'Submit'
+            )
           )
         )
       );

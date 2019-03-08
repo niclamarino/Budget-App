@@ -17,11 +17,42 @@
       border-bottom: 1px solid #ddd;
     }
 
+    header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header div {
+      margin: 10px 0;
+    }
+
+    .header-left {
+      background: #eee;
+      padding: 20px;
+    }
+
+    form div {
+      display: flex;
+      /* justify-content: space-between; */
+      align-items: center;
+    }
+
+    .cost-input {
+      width: 60px;
+    }
+
+    .header-right {
+    }
+
     input {
       border: none;
       border-bottom: 1px solid #ddd;
       margin: 0 10px;
+      padding: 5px;
     }
+
+    label { margin: 0; }
 
     .table { width: 100%; max-width: 600px; margin: 0 auto; }
 
@@ -40,9 +71,13 @@
 
     .btn-danger,
     .btn-secondary {
+      width: 100%;
+    }
+
+    .btn {
+      border: 0; border-radius: 0;
       border: 0;
       border-radius: 0;
-      width: 100%;
     }
 
     #empty-expense-list-msg {

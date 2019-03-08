@@ -81,12 +81,6 @@ class BudgetApp extends React.Component {
           handleAdjustBudget={this.handleAdjustBudget}
           handleAddExpense={this.handleAddExpense}
         />
-        {
-        //  this.state.totalBudget === 0 ? <EnterBudget handleAddBudget={this.handleAddBudget}/> : <AdjustBudget handleAdjustBudget={this.handleAdjustBudget}/>
-        }
-        {/* <AddExpense
-           handleAddExpense={this.handleAddExpense}
-        /> */}
         <Expenses
           expenseList={this.state.expenseList}
           handleDeleteExpense={this.handleDeleteExpense}
@@ -100,16 +94,18 @@ class BudgetApp extends React.Component {
 const Header = (props) => {
   return (
     <header>
-      <div>
-        <EnterBudget
-          handleAddBudget={props.handleAddBudget}
-          handleAdjustBudget={props.handleAdjustBudget}
-        />
-        <AddExpense handleAddExpense={props.handleAddExpense} />
-      </div>
-      <div>
-        <h1>Budget: ${props.totalBudget}</h1>
-        <h2>Total Expenses: ${props.totalExpenses}</h2>
+      <div className="container">
+        <div className="header-left">
+          <EnterBudget
+            handleAddBudget={props.handleAddBudget}
+            handleAdjustBudget={props.handleAdjustBudget}
+          />
+          <AddExpense handleAddExpense={props.handleAddExpense} />
+        </div>
+        <div className="header-right">
+          <h1 >Budget: ${props.totalBudget}</h1>
+          <h2>Total Expenses: ${props.totalExpenses}</h2>
+        </div>
       </div>
     </header>
   );
@@ -140,25 +136,28 @@ class EnterBudget extends React.Component {
     this.props.handleAdjustBudget(amount);
     e.target.elements.adjustment.value=''
   }
-
   render() {
     return (
-      <section class="enter-budget">
+      <div>
       {
         this.state.hasBudget ?
         <form onSubmit={this.handleAdjustBudget}>
-          <label>Add to or Subtract from Budget</label>
-          <input type="number" name="adjustment" placeholder="+/-" />
-          <button>Submit</button>
+          <div>
+            <label>Add to or Subtract from Budget</label>
+            <input className="cost-input" type="number" name="adjustment" placeholder="+/-" />
+            <button className="btn btn-dark">Submit</button>
+          </div>
         </form>
         :
         <form onSubmit={this.handleAddBudget}>
-          <label>Enter Budget</label>
-          <input type="number" name="budget" min="1" placeholder="$" />
-          <button>Submit</button>
+          <div>
+            <label>Enter Budget</label>
+            <input  className="cost-input" type="number" name="budget" min="1" placeholder="$" />
+            <button className="btn btn-dark">Submit</button>
+          </div>
         </form>
       }
-      </section>
+    </div>
     );
   }
 }
@@ -182,14 +181,16 @@ class AddExpense extends React.Component {
   }
   render() {
     return (
-      <section className="add-expense">
-        <h3>Add an Expense</h3>
+      <div className="add-expense">
         <form onSubmit={this.handleAddExpense}>
-          <input type="text" name="name" placeholder="Expense Name"/>
-          <input type="number" name="cost" min="1" placeholder="$"/>
-          <button >Add</button>
+          <div>
+            <label>Add an Expense</label>
+            <input type="text" name="name" placeholder="Expense Name"/>
+            <input  className="cost-input" type="number" name="cost" min="1" placeholder="$"/>
+            <button className="btn btn-dark">Submit</button>
+          </div>
         </form>
-      </section>
+      </div>
     );
   }
 }
