@@ -119,7 +119,7 @@ var BudgetApp = function (_React$Component) {
     value: function render() {
       return React.createElement(
         "div",
-        { className: "container" },
+        { className: "container-fluid" },
         React.createElement(Header, {
           totalBudget: this.state.totalBudget, totalExpenses: this.state.totalExpenses
         }),
@@ -148,13 +148,13 @@ var Header = function Header(props) {
     React.createElement(
       "h1",
       null,
-      "Budget: $ ",
+      "Budget: $",
       props.totalBudget
     ),
     React.createElement(
       "h2",
       null,
-      "Total Expenses: $ ",
+      "Total Expenses: $",
       props.totalExpenses
     )
   );
@@ -326,56 +326,61 @@ var AddExpense = function (_React$Component4) {
 var Expenses = function Expenses(props) {
   return React.createElement(
     "section",
-    { id: "expenses" },
+    { id: "expenses", "class": "container" },
     React.createElement(
-      "h4",
-      null,
+      "h2",
+      { "class": "text-center text-muted" },
       "Expenses"
     ),
-    props.expenseList.map(function (expense) {
-      return React.createElement(Expense, {
-        key: expense.name,
-        expenseName: expense.name,
-        expenseCost: expense.cost,
-        handleDeleteExpense: props.handleDeleteExpense
-      });
-    })
+    React.createElement(
+      "table",
+      { "class": "expense table table-sm table-striped table-bordered table-hover" },
+      React.createElement(
+        "tbody",
+        null,
+        props.expenseList.map(function (expense) {
+          return React.createElement(Expense, {
+            key: expense.name,
+            expenseName: expense.name,
+            expenseCost: expense.cost,
+            handleDeleteExpense: props.handleDeleteExpense
+          });
+        })
+      )
+    )
   );
 };
 
 // Expense ==========================================
 var Expense = function Expense(props) {
   return React.createElement(
-    "div",
+    "tr",
     null,
     React.createElement(
-      "table",
-      { "class": "expense" },
+      "td",
+      { "class": "expense-name" },
+      props.expenseName
+    ),
+    React.createElement(
+      "td",
+      { "class": "expense-cost" },
+      "$",
+      props.expenseCost
+    ),
+    React.createElement(
+      "td",
+      { "class": "expense-remove" },
       React.createElement(
-        "tr",
-        null,
-        React.createElement(
-          "td",
-          { "class": "expense-name" },
-          props.expenseName
-        ),
-        React.createElement(
-          "td",
-          { "class": "expense-cost" },
-          "$",
-          props.expenseCost
-        ),
-        React.createElement(
-          "td",
-          { "class": "expense-remove", onClick: function onClick(e) {
-              props.handleDeleteExpense({ name: props.expenseName, cost: props.expenseCost });
-            } },
-          React.createElement(
-            "button",
-            null,
-            "Remove"
-          )
-        )
+        "button",
+        { "class": "btn btn-danger", onClick: function onClick(e) {
+            props.handleDeleteExpense({ name: props.expenseName, cost: props.expenseCost });
+          } },
+        "Remove"
+      ),
+      React.createElement(
+        "button",
+        { "class": "btn btn-secondary" },
+        "Edit"
       )
     )
   );

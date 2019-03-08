@@ -73,7 +73,7 @@ class BudgetApp extends React.Component {
 // render ==================================================
   render() {
     return (
-      <div className="container">
+      <div className="container-fluid">
         <Header
           totalBudget={this.state.totalBudget}    totalExpenses={this.state.totalExpenses}
         />
@@ -96,8 +96,8 @@ class BudgetApp extends React.Component {
 const Header = (props) => {
   return (
     <header>
-      <h1>Budget: $ {props.totalBudget}</h1>
-      <h2>Total Expenses: $ {props.totalExpenses}</h2>
+      <h1>Budget: ${props.totalBudget}</h1>
+      <h2>Total Expenses: ${props.totalExpenses}</h2>
     </header>
   );
 };
@@ -188,18 +188,22 @@ class AddExpense extends React.Component {
 // Expenses ========================================
 const Expenses = (props) => {
   return (
-    <section id="expenses">
-      <h4>Expenses</h4>
-      {
-        props.expenseList.map((expense) => (
-          <Expense
-            key= {expense.name}
-            expenseName = {expense.name}
-            expenseCost = {expense.cost}
-            handleDeleteExpense={props.handleDeleteExpense}
-          />
-        ))
-      }
+    <section id="expenses" class="container">
+      <h2 class="text-center text-muted">Expenses</h2>
+      <table class="expense table table-sm table-striped table-bordered table-hover">
+        <tbody>
+          {
+            props.expenseList.map((expense) => (
+              <Expense
+                key= {expense.name}
+                expenseName = {expense.name}
+                expenseCost = {expense.cost}
+                handleDeleteExpense={props.handleDeleteExpense}
+              />
+            ))
+          }
+        </tbody>
+      </table>
     </section>
   );
 };
@@ -207,17 +211,21 @@ const Expenses = (props) => {
 // Expense ==========================================
 const Expense = (props) => {
   return (
-    <div>
-      <table class="expense">
-        <tr>
-          <td class="expense-name">{props.expenseName}</td>
-          <td class="expense-cost">${props.expenseCost}</td>
-          <td class="expense-remove" onClick={(e) => {
-            props.handleDeleteExpense({name : props.expenseName, cost : props.expenseCost})
-          }}><button>Remove</button></td>
-        </tr>
-      </table>
-    </div>
+    <tr>
+      <td class="expense-name">{props.expenseName}</td>
+      <td class="expense-cost">${props.expenseCost}</td>
+      <td class="expense-remove">
+        <button class="btn btn-danger" onClick={(e) => {
+          props.handleDeleteExpense({name : props.expenseName, cost : props.expenseCost})
+        }}>Remove</button>
+        <button class="btn btn-secondary">Edit</button>
+      </td>
+      {/* <td class="expense-edit" onClick={(e) => {
+        //todo props.handleEditExpense()
+      }}>
+
+      </td> */}
+    </tr>
   );
 };
 

@@ -3,7 +3,43 @@
   <head>
     <meta charset="utf-8">
     <title>Budget App</title>
+    <link href="https://fonts.googleapis.com/css?family=Patrick+Hand" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   </head>
+  <style>
+    * { margin: 0; padding: 0 }
+    .container-fluid { padding: 0; }
+    body { font-family: 'Patrick Hand', cursive; }
+    #app { width: 100%; }
+
+    header {
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    input {
+      border: none;
+      border-bottom: 1px solid #ddd;
+      margin: 0 10px;
+    }
+
+    .expense-cost {
+      border-right: 0 !important;
+    }
+
+    .expense-remove {
+      padding: 0 !important;
+      border-left: 0 !important;
+    }
+
+    .btn-danger,
+    .btn-secondary {
+      border: 0;
+      border-radius: 0;
+    }
+
+
+  </style>
   <body>
     <div id="app"></div>
 
