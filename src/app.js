@@ -118,13 +118,13 @@ class EnterBudget extends React.Component {
   }
   render() {
     return (
-      <div>
+      <section class="enter-budget">
         <form onSubmit={this.handleAddBudget}>
           <label>Enter Budget</label>
           <input type="number" name="budget" min="1" placeholder="$" />
           <button>Submit</button>
         </form>
-      </div>
+      </section>
     );
   }
 }
@@ -143,13 +143,13 @@ class AdjustBudget extends React.Component {
   }
   render() {
     return (
-      <div>
+      <section class="enter-budget">
         <form onSubmit={this.handleAdjustBudget}>
           <label>Add to or Subtract from Budget</label>
           <input type="number" name="adjustment" placeholder="+/-" />
           <button>Submit</button>
         </form>
-      </div>
+      </section>
     );
   }
 }
@@ -173,14 +173,14 @@ class AddExpense extends React.Component {
   }
   render() {
     return (
-      <div>
+      <section className="add-expense">
         <h3>Add an Expense</h3>
         <form onSubmit={this.handleAddExpense}>
           <input type="text" name="name" placeholder="Expense Name"/>
           <input type="number" name="cost" min="1" placeholder="$"/>
           <button >Add</button>
         </form>
-      </div>
+      </section>
     );
   }
 }
@@ -188,9 +188,10 @@ class AddExpense extends React.Component {
 // Expenses ========================================
 const Expenses = (props) => {
   return (
-    <section id="expenses" class="container">
-      <h2 class="text-center text-muted">Expenses</h2>
-      <table class="expense table table-sm table-striped table-bordered table-hover">
+    <section id="expenses" className="container">
+      <h2 className="text-center text-muted">Expenses</h2>
+      {/* <table class="expense table table-sm table-striped table-bordered table-hover"> */}
+      <table className="expense table table-striped table-bordered table-hover">
         <tbody>
           {
             props.expenseList.map((expense) => (
@@ -212,19 +213,20 @@ const Expenses = (props) => {
 const Expense = (props) => {
   return (
     <tr>
-      <td class="expense-name">{props.expenseName}</td>
-      <td class="expense-cost">${props.expenseCost}</td>
-      <td class="expense-remove">
-        <button class="btn btn-danger" onClick={(e) => {
+      <td className="expense-edit-btn">
+        <button className="btn btn-secondary" onClick={(e) => {
+          //todo props.handleEditExpense()
+          console.log('edit')
+        }}>Edit</button>
+      </td>
+      <td className="expense-name">{props.expenseName}</td>
+      <td className="expense-cost">${props.expenseCost}</td>
+      <td className="expense-remove-btn">
+        <button className="btn btn-danger" onClick={(e) => {
           props.handleDeleteExpense({name : props.expenseName, cost : props.expenseCost})
         }}>Remove</button>
-        <button class="btn btn-secondary">Edit</button>
-      </td>
-      {/* <td class="expense-edit" onClick={(e) => {
-        //todo props.handleEditExpense()
-      }}>
 
-      </td> */}
+      </td>
     </tr>
   );
 };
