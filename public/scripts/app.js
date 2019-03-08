@@ -126,10 +126,10 @@ var BudgetApp = function (_React$Component) {
         'div',
         { className: 'container-fluid' },
         React.createElement(Header, {
-          totalBudget: this.state.totalBudget, totalExpenses: this.state.totalExpenses
-        }),
-        this.state.totalBudget === 0 ? React.createElement(EnterBudget, { handleAddBudget: this.handleAddBudget }) : React.createElement(AdjustBudget, { handleAdjustBudget: this.handleAdjustBudget }),
-        React.createElement(AddExpense, {
+          totalBudget: this.state.totalBudget,
+          totalExpenses: this.state.totalExpenses,
+          handleAddBudget: this.handleAddBudget,
+          handleAdjustBudget: this.handleAdjustBudget,
           handleAddExpense: this.handleAddExpense
         }),
         React.createElement(Expenses, {
@@ -151,16 +151,29 @@ var Header = function Header(props) {
     'header',
     null,
     React.createElement(
-      'h1',
+      'div',
       null,
-      'Budget: $',
-      props.totalBudget
+      React.createElement(EnterBudget, {
+        handleAddBudget: props.handleAddBudget,
+        handleAdjustBudget: props.handleAdjustBudget
+      }),
+      React.createElement(AddExpense, { handleAddExpense: props.handleAddExpense })
     ),
     React.createElement(
-      'h2',
+      'div',
       null,
-      'Total Expenses: $',
-      props.totalExpenses
+      React.createElement(
+        'h1',
+        null,
+        'Budget: $',
+        props.totalBudget
+      ),
+      React.createElement(
+        'h2',
+        null,
+        'Total Expenses: $',
+        props.totalExpenses
+      )
     )
   );
 };
@@ -176,8 +189,11 @@ var EnterBudget = function (_React$Component2) {
     var _this4 = _possibleConstructorReturn(this, (EnterBudget.__proto__ || Object.getPrototypeOf(EnterBudget)).call(this, props));
 
     _this4.handleAddBudget = _this4.handleAddBudget.bind(_this4);
-    //todo error state
-    return _this4;
+    _this4.handleAdjustBudget = _this4.handleAdjustBudget.bind(_this4);
+    _this4.state = {
+      hasBudget: false
+      //todo error state
+    };return _this4;
   }
 
   _createClass(EnterBudget, [{
@@ -188,6 +204,17 @@ var EnterBudget = function (_React$Component2) {
       //todo error handling
       this.props.handleAddBudget(budget);
       e.target.elements.budget.value = '';
+      this.setState(function () {
+        return { hasBudget: true };
+      });
+    }
+  }, {
+    key: 'handleAdjustBudget',
+    value: function handleAdjustBudget(e) {
+      e.preventDefault();
+      var amount = e.target.elements.adjustment.value;
+      this.props.handleAdjustBudget(amount);
+      e.target.elements.adjustment.value = '';
     }
   }, {
     key: 'render',
@@ -195,7 +222,21 @@ var EnterBudget = function (_React$Component2) {
       return React.createElement(
         'section',
         { 'class': 'enter-budget' },
-        React.createElement(
+        this.state.hasBudget ? React.createElement(
+          'form',
+          { onSubmit: this.handleAdjustBudget },
+          React.createElement(
+            'label',
+            null,
+            'Add to or Subtract from Budget'
+          ),
+          React.createElement('input', { type: 'number', name: 'adjustment', placeholder: '+/-' }),
+          React.createElement(
+            'button',
+            null,
+            'Submit'
+          )
+        ) : React.createElement(
           'form',
           { onSubmit: this.handleAddBudget },
           React.createElement(
@@ -217,73 +258,22 @@ var EnterBudget = function (_React$Component2) {
   return EnterBudget;
 }(React.Component);
 
-// AdjustBudget =====================================
-
-
-var AdjustBudget = function (_React$Component3) {
-  _inherits(AdjustBudget, _React$Component3);
-
-  function AdjustBudget(props) {
-    _classCallCheck(this, AdjustBudget);
-
-    var _this5 = _possibleConstructorReturn(this, (AdjustBudget.__proto__ || Object.getPrototypeOf(AdjustBudget)).call(this, props));
-
-    _this5.handleAdjustBudget = _this5.handleAdjustBudget.bind(_this5);
-    return _this5;
-  }
-
-  _createClass(AdjustBudget, [{
-    key: 'handleAdjustBudget',
-    value: function handleAdjustBudget(e) {
-      e.preventDefault();
-      var amount = e.target.elements.adjustment.value;
-      this.props.handleAdjustBudget(amount);
-      e.target.elements.adjustment.value = '';
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return React.createElement(
-        'section',
-        { 'class': 'enter-budget' },
-        React.createElement(
-          'form',
-          { onSubmit: this.handleAdjustBudget },
-          React.createElement(
-            'label',
-            null,
-            'Add to or Subtract from Budget'
-          ),
-          React.createElement('input', { type: 'number', name: 'adjustment', placeholder: '+/-' }),
-          React.createElement(
-            'button',
-            null,
-            'Submit'
-          )
-        )
-      );
-    }
-  }]);
-
-  return AdjustBudget;
-}(React.Component);
-
 // AddExpense ======================================
 
 
-var AddExpense = function (_React$Component4) {
-  _inherits(AddExpense, _React$Component4);
+var AddExpense = function (_React$Component3) {
+  _inherits(AddExpense, _React$Component3);
 
   function AddExpense(props) {
     _classCallCheck(this, AddExpense);
 
-    var _this6 = _possibleConstructorReturn(this, (AddExpense.__proto__ || Object.getPrototypeOf(AddExpense)).call(this, props));
+    var _this5 = _possibleConstructorReturn(this, (AddExpense.__proto__ || Object.getPrototypeOf(AddExpense)).call(this, props));
 
-    _this6.handleAddExpense = _this6.handleAddExpense.bind(_this6);
-    _this6.state = {
+    _this5.handleAddExpense = _this5.handleAddExpense.bind(_this5);
+    _this5.state = {
       error: undefined
     };
-    return _this6;
+    return _this5;
   }
 
   _createClass(AddExpense, [{

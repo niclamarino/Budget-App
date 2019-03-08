@@ -75,14 +75,18 @@ class BudgetApp extends React.Component {
     return (
       <div className="container-fluid">
         <Header
-          totalBudget={this.state.totalBudget}    totalExpenses={this.state.totalExpenses}
+          totalBudget={this.state.totalBudget}
+          totalExpenses={this.state.totalExpenses}
+          handleAddBudget={this.handleAddBudget}
+          handleAdjustBudget={this.handleAdjustBudget}
+          handleAddExpense={this.handleAddExpense}
         />
         {
-          this.state.totalBudget === 0 ? <EnterBudget handleAddBudget={this.handleAddBudget}/> : <AdjustBudget handleAdjustBudget={this.handleAdjustBudget}/>
+        //  this.state.totalBudget === 0 ? <EnterBudget handleAddBudget={this.handleAddBudget}/> : <AdjustBudget handleAdjustBudget={this.handleAdjustBudget}/>
         }
-        <AddExpense
+        {/* <AddExpense
            handleAddExpense={this.handleAddExpense}
-        />
+        /> */}
         <Expenses
           expenseList={this.state.expenseList}
           handleDeleteExpense={this.handleDeleteExpense}
@@ -96,8 +100,17 @@ class BudgetApp extends React.Component {
 const Header = (props) => {
   return (
     <header>
-      <h1>Budget: ${props.totalBudget}</h1>
-      <h2>Total Expenses: ${props.totalExpenses}</h2>
+      <div>
+        <EnterBudget
+          handleAddBudget={props.handleAddBudget}
+          handleAdjustBudget={props.handleAdjustBudget}
+        />
+        <AddExpense handleAddExpense={props.handleAddExpense} />
+      </div>
+      <div>
+        <h1>Budget: ${props.totalBudget}</h1>
+        <h2>Total Expenses: ${props.totalExpenses}</h2>
+      </div>
     </header>
   );
 };
@@ -106,7 +119,11 @@ const Header = (props) => {
 class EnterBudget extends React.Component {
   constructor(props) {
     super(props)
-    this.handleAddBudget = this.handleAddBudget.bind(this)
+    this.handleAddBudget = this.handleAddBudget.bind(this);
+    this.handleAdjustBudget=this.handleAdjustBudget.bind(this);
+    this.state = {
+      hasBudget : false
+    }
     //todo error state
   }
   handleAddBudget(e) {
@@ -115,25 +132,7 @@ class EnterBudget extends React.Component {
     //todo error handling
     this.props.handleAddBudget(budget);
     e.target.elements.budget.value=''
-  }
-  render() {
-    return (
-      <section class="enter-budget">
-        <form onSubmit={this.handleAddBudget}>
-          <label>Enter Budget</label>
-          <input type="number" name="budget" min="1" placeholder="$" />
-          <button>Submit</button>
-        </form>
-      </section>
-    );
-  }
-}
-
-// AdjustBudget =====================================
-class AdjustBudget extends React.Component {
-  constructor(props) {
-    super(props)
-    this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
+    this.setState(() => ({ hasBudget : true }));
   }
   handleAdjustBudget(e) {
     e.preventDefault();
@@ -141,14 +140,24 @@ class AdjustBudget extends React.Component {
     this.props.handleAdjustBudget(amount);
     e.target.elements.adjustment.value=''
   }
+
   render() {
     return (
       <section class="enter-budget">
+      {
+        this.state.hasBudget ?
         <form onSubmit={this.handleAdjustBudget}>
           <label>Add to or Subtract from Budget</label>
           <input type="number" name="adjustment" placeholder="+/-" />
           <button>Submit</button>
         </form>
+        :
+        <form onSubmit={this.handleAddBudget}>
+          <label>Enter Budget</label>
+          <input type="number" name="budget" min="1" placeholder="$" />
+          <button>Submit</button>
+        </form>
+      }
       </section>
     );
   }
