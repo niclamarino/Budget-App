@@ -142,19 +142,15 @@ class EnterBudget extends React.Component {
       {
         this.state.hasBudget ?
         <form onSubmit={this.handleAdjustBudget}>
-          <div>
             <label>Add to or Subtract from Budget</label>
             <input className="cost-input" type="number" name="adjustment" placeholder="+/-" />
             <button className="btn btn-dark">Submit</button>
-          </div>
         </form>
         :
         <form onSubmit={this.handleAddBudget}>
-          <div>
             <label>Enter Budget</label>
             <input  className="cost-input" type="number" name="budget" min="1" placeholder="$" />
             <button className="btn btn-dark">Submit</button>
-          </div>
         </form>
       }
     </div>
@@ -183,12 +179,10 @@ class AddExpense extends React.Component {
     return (
       <div className="add-expense">
         <form onSubmit={this.handleAddExpense}>
-          <div>
             <label>Add an Expense</label>
             <input type="text" name="name" placeholder="Expense Name"/>
             <input  className="cost-input" type="number" name="cost" min="1" placeholder="$"/>
             <button className="btn btn-dark">Submit</button>
-          </div>
         </form>
       </div>
     );
