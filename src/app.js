@@ -9,10 +9,10 @@ class BudgetApp extends React.Component {
     this.state = {
       totalExpenses : 0,
       expenseList : [
-        {name : "Adopt a puppy",cost : 500},
-        {name : "Dog Food",cost : 50},
-        {name : "Dog Leash",cost : 20},
-        {name : "Dog Bowls",cost : 15}
+        // {name : "Adopt a puppy",cost : 500},
+        // {name : "Dog Food",cost : 50},
+        // {name : "Dog Leash",cost : 20},
+        // {name : "Dog Bowls",cost : 15}
       ],
       totalBudget : 0
     };
@@ -94,6 +94,7 @@ class BudgetApp extends React.Component {
 
 // Header ==========================================
 const Header = (props) => {
+  const danger = props.totalBudget < 0 ? "danger" : ""
   return (
     <header>
       <div className="container">
@@ -108,7 +109,7 @@ const Header = (props) => {
           />
         </div>
         <div className="header-right">
-          <h1 >Budget: ${props.totalBudget}</h1>
+          <h1>Budget: $<span className={danger}>{props.totalBudget}</span></h1>
           <h2>Total Expenses: ${props.totalExpenses}</h2>
         </div>
       </div>
