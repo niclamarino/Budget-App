@@ -38,6 +38,14 @@ class BudgetApp extends React.Component {
   }
 // handleAddExpense ========================================
   handleAddExpense(expense) {
+    console.log(expense)
+    const filteredList = this.state.expenseList.filter((exp)=> expense.name === exp.name && expense.cost === exp.cost);
+
+    if (!expense.name || !expense.cost) {
+      return 'Expense name and cost needed.';
+    } else if (filteredList.length > 0) {
+      return 'This expense already exists.'
+    }
     this.setState((prevState) => ({
       expenseList : prevState.expenseList.concat(expense),
       totalBudget : parseInt(this.state.totalBudget) - parseInt(expense.cost),
@@ -155,10 +163,11 @@ class EnterBudget extends React.Component {
       <div>
       {
         this.state.hasBudget ?
-        <form onSubmit={this.handleAdjustBudget}>
+        <form>
             <label>Add to or Subtract from Budget</label>
             <input className="cost-input" type="number" name="adjustment" placeholder="+/-" />
             <button className="btn btn-dark">Submit</button>
+            {/* <button className="btn btn-danger">Reset</button> */}
         </form>
         :
         <form onSubmit={this.handleAddBudget}>
@@ -183,11 +192,15 @@ class AddExpense extends React.Component {
   }
   handleAddExpense(e) {
     e.preventDefault();
-    const name = e.target.elements.name.value.trim()
-    const cost = e.target.elements.cost.value
-    this.props.handleAddExpense({ name , cost });
-    e.target.elements.name.value=''
-    e.target.elements.cost.value=''
+    const name = e.target.elements.name.value.trim();
+    const cost = e.target.elements.cost.value;
+    const error = this.props.handleAddExpense({ name , cost });
+    this.setState(()=>({error}));
+
+    if (!error) {
+      e.target.elements.name.value=''
+      e.target.elements.cost.value=''
+    }
   }
   render() {
     return (
@@ -198,6 +211,7 @@ class AddExpense extends React.Component {
             <input  className="cost-input" type="number" name="cost" min="1" placeholder="$"/>
             <button className="btn btn-dark">Submit</button>
         </form>
+         {this.state.error && <p class="error-msg text-center">{this.state.error}</p>}
       </div>
     );
   }

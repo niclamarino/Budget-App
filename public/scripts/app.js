@@ -69,6 +69,16 @@ var BudgetApp = function (_React$Component) {
     value: function handleAddExpense(expense) {
       var _this2 = this;
 
+      console.log(expense);
+      var filteredList = this.state.expenseList.filter(function (exp) {
+        return expense.name === exp.name && expense.cost === exp.cost;
+      });
+
+      if (!expense.name || !expense.cost) {
+        return 'Expense name and cost needed.';
+      } else if (filteredList.length > 0) {
+        return 'This expense already exists.';
+      }
       this.setState(function (prevState) {
         return {
           expenseList: prevState.expenseList.concat(expense),
@@ -245,7 +255,7 @@ var EnterBudget = function (_React$Component2) {
         null,
         this.state.hasBudget ? React.createElement(
           'form',
-          { onSubmit: this.handleAdjustBudget },
+          null,
           React.createElement(
             'label',
             null,
@@ -303,9 +313,15 @@ var AddExpense = function (_React$Component3) {
       e.preventDefault();
       var name = e.target.elements.name.value.trim();
       var cost = e.target.elements.cost.value;
-      this.props.handleAddExpense({ name: name, cost: cost });
-      e.target.elements.name.value = '';
-      e.target.elements.cost.value = '';
+      var error = this.props.handleAddExpense({ name: name, cost: cost });
+      this.setState(function () {
+        return { error: error };
+      });
+
+      if (!error) {
+        e.target.elements.name.value = '';
+        e.target.elements.cost.value = '';
+      }
     }
   }, {
     key: 'render',
@@ -328,6 +344,11 @@ var AddExpense = function (_React$Component3) {
             { className: 'btn btn-dark' },
             'Submit'
           )
+        ),
+        this.state.error && React.createElement(
+          'p',
+          { 'class': 'error-msg text-center' },
+          this.state.error
         )
       );
     }
