@@ -3,28 +3,35 @@ class BudgetApp extends React.Component {
     super(props)
     this.handleAddExpense = this.handleAddExpense.bind(this)
     this.handleDeleteExpense = this.handleDeleteExpense.bind(this)
+    this.handleEditExpenseModal = this.handleEditExpenseModal.bind(this)
     this.handleAddBudget = this.handleAddBudget.bind(this)
     this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
-    this.subtractExpenseFromBudget = this.subtractExpenseFromBudget.bind(this)
     this.state = {
       totalExpenses : 0,
-      expenseList : [
-        // {name : "Adopt a puppy",cost : 500},
-        // {name : "Dog Food",cost : 50},
-        // {name : "Dog Leash",cost : 20},
-        // {name : "Dog Bowls",cost : 15}
-      ],
-      totalBudget : 0
+      expenseList : [],
+      totalBudget : 0,
     };
   }
 // lifecycle hooks ==========================================
   componentDidMount() {
-    //todo
     console.log('componentDidMount');
+    try {
+      const json = localStorage.getItem('expenseList');
+      const expenseList = JSON.parse(json);
+      if (expenseList) {
+        this.setState(() => ({ expenseList }));
+      }
+    } catch (e) {
+        // Do nothing
+        console.log(e);
+    }
   }
   componentDidUpdate(prevProps,prevState) {
-    //todo
     console.log('componentDidUpdate');
+    if (prevState.expenseList.length !== this.state.expenseList.length) {
+      const json = JSON.stringify(this.state.expenseList);
+      localStorage.setItem('expenseList', json);
+    }
   }
   componentWillUnmount() {
     console.log('componentWillUnmount');
@@ -38,6 +45,11 @@ class BudgetApp extends React.Component {
     }));
 
   }
+// handleEditExpenseModal =====================================
+  handleEditExpenseModal(expenseToEdit) {
+    console.log(expenseToEdit);
+  }
+
 // handleDeleteExpense =====================================
   handleDeleteExpense(expenseToRemove) {
     this.setState(prevState => ({
@@ -67,11 +79,6 @@ class BudgetApp extends React.Component {
     });
   }
 
-// subtractExpenseFromBudget ===============================
-  subtractExpenseFromBudget(costToSubtract) {
-    //todo
-  }
-
 // render ==================================================
   render() {
     return (
@@ -86,6 +93,7 @@ class BudgetApp extends React.Component {
         <Expenses
           expenseList={this.state.expenseList}
           handleDeleteExpense={this.handleDeleteExpense}
+          handleEditExpenseModal={this.handleEditExpenseModal}
         />
       </div>
     );
@@ -210,6 +218,7 @@ const Expenses = (props) => {
                   expenseName = {expense.name}
                   expenseCost = {expense.cost}
                   handleDeleteExpense={props.handleDeleteExpense}
+                  handleEditExpenseModal={props.handleEditExpenseModal}
                 />
               ))
             }
@@ -227,9 +236,7 @@ const Expense = (props) => {
     <tr>
       <td className="expense-edit-btn">
         <button className="btn btn-secondary" onClick={(e) => {
-          //todo props.handleEditExpense()
-          console.log('edit')
-        }}>Edit</button>
+          props.handleEditExpenseModal({name : props.expenseName, cost : props.expenseCost})}}>Edit</button>
       </td>
       <td className="expense-name">{props.expenseName}</td>
       <td className="expense-cost">${props.expenseCost}</td>
@@ -242,5 +249,19 @@ const Expense = (props) => {
     </tr>
   );
 };
+
+// EditExpense ========================================
+const EditExpense = (props) => {
+  return (
+    <div className="edit-expense-modal container">
+      <form>
+        <label>Edit Expense</label>
+        <input type="text" name="name" placeholder="Expense Name"/>
+        <input  className="cost-input" type="number" name="cost" min="1" placeholder="$"/>
+        <button className="btn btn-dark">Submit</button>
+      </form>
+    </div>
+  )
+}
 
 ReactDOM.render(<BudgetApp />, document.getElementById('app'));

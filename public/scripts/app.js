@@ -18,17 +18,12 @@ var BudgetApp = function (_React$Component) {
 
     _this.handleAddExpense = _this.handleAddExpense.bind(_this);
     _this.handleDeleteExpense = _this.handleDeleteExpense.bind(_this);
+    _this.handleEditExpenseModal = _this.handleEditExpenseModal.bind(_this);
     _this.handleAddBudget = _this.handleAddBudget.bind(_this);
     _this.handleAdjustBudget = _this.handleAdjustBudget.bind(_this);
-    _this.subtractExpenseFromBudget = _this.subtractExpenseFromBudget.bind(_this);
     _this.state = {
       totalExpenses: 0,
-      expenseList: [
-        // {name : "Adopt a puppy",cost : 500},
-        // {name : "Dog Food",cost : 50},
-        // {name : "Dog Leash",cost : 20},
-        // {name : "Dog Bowls",cost : 15}
-      ],
+      expenseList: [],
       totalBudget: 0
     };
     return _this;
@@ -39,14 +34,28 @@ var BudgetApp = function (_React$Component) {
   _createClass(BudgetApp, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      //todo
       console.log('componentDidMount');
+      try {
+        var json = localStorage.getItem('expenseList');
+        var expenseList = JSON.parse(json);
+        if (expenseList) {
+          this.setState(function () {
+            return { expenseList: expenseList };
+          });
+        }
+      } catch (e) {
+        // Do nothing
+        console.log(e);
+      }
     }
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate(prevProps, prevState) {
-      //todo
       console.log('componentDidUpdate');
+      if (prevState.expenseList.length !== this.state.expenseList.length) {
+        var json = JSON.stringify(this.state.expenseList);
+        localStorage.setItem('expenseList', json);
+      }
     }
   }, {
     key: 'componentWillUnmount',
@@ -68,6 +77,14 @@ var BudgetApp = function (_React$Component) {
         };
       });
     }
+    // handleEditExpenseModal =====================================
+
+  }, {
+    key: 'handleEditExpenseModal',
+    value: function handleEditExpenseModal(expenseToEdit) {
+      console.log(expenseToEdit);
+    }
+
     // handleDeleteExpense =====================================
 
   }, {
@@ -111,14 +128,6 @@ var BudgetApp = function (_React$Component) {
       });
     }
 
-    // subtractExpenseFromBudget ===============================
-
-  }, {
-    key: 'subtractExpenseFromBudget',
-    value: function subtractExpenseFromBudget(costToSubtract) {}
-    //todo
-
-
     // render ==================================================
 
   }, {
@@ -136,7 +145,8 @@ var BudgetApp = function (_React$Component) {
         }),
         React.createElement(Expenses, {
           expenseList: this.state.expenseList,
-          handleDeleteExpense: this.handleDeleteExpense
+          handleDeleteExpense: this.handleDeleteExpense,
+          handleEditExpenseModal: this.handleEditExpenseModal
         })
       );
     }
@@ -352,7 +362,8 @@ var Expenses = function Expenses(props) {
             key: expense.name,
             expenseName: expense.name,
             expenseCost: expense.cost,
-            handleDeleteExpense: props.handleDeleteExpense
+            handleDeleteExpense: props.handleDeleteExpense,
+            handleEditExpenseModal: props.handleEditExpenseModal
           });
         })
       )
@@ -375,8 +386,7 @@ var Expense = function Expense(props) {
       React.createElement(
         'button',
         { className: 'btn btn-secondary', onClick: function onClick(e) {
-            //todo props.handleEditExpense()
-            console.log('edit');
+            props.handleEditExpenseModal({ name: props.expenseName, cost: props.expenseCost });
           } },
         'Edit'
       )
@@ -401,6 +411,30 @@ var Expense = function Expense(props) {
             props.handleDeleteExpense({ name: props.expenseName, cost: props.expenseCost });
           } },
         'Remove'
+      )
+    )
+  );
+};
+
+// EditExpense ========================================
+var EditExpense = function EditExpense(props) {
+  return React.createElement(
+    'div',
+    { className: 'edit-expense-modal container' },
+    React.createElement(
+      'form',
+      null,
+      React.createElement(
+        'label',
+        null,
+        'Edit Expense'
+      ),
+      React.createElement('input', { type: 'text', name: 'name', placeholder: 'Expense Name' }),
+      React.createElement('input', { className: 'cost-input', type: 'number', name: 'cost', min: '1', placeholder: '$' }),
+      React.createElement(
+        'button',
+        { className: 'btn btn-dark' },
+        'Submit'
       )
     )
   );
