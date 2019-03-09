@@ -18,7 +18,7 @@ var BudgetApp = function (_React$Component) {
 
     _this.handleAddExpense = _this.handleAddExpense.bind(_this);
     _this.handleDeleteExpense = _this.handleDeleteExpense.bind(_this);
-    _this.handleEditExpenseModal = _this.handleEditExpenseModal.bind(_this);
+    // this.handleEditExpenseModal = this.handleEditExpenseModal.bind(this)
     _this.handleAddBudget = _this.handleAddBudget.bind(_this);
     _this.handleAdjustBudget = _this.handleAdjustBudget.bind(_this);
     _this.state = {
@@ -78,12 +78,9 @@ var BudgetApp = function (_React$Component) {
       });
     }
     // handleEditExpenseModal =====================================
-
-  }, {
-    key: 'handleEditExpenseModal',
-    value: function handleEditExpenseModal(expenseToEdit) {
-      console.log(expenseToEdit);
-    }
+    // handleEditExpenseModal(expenseToEdit) {
+    //   console.log(expenseToEdit);
+    // }
 
     // handleDeleteExpense =====================================
 
@@ -362,8 +359,7 @@ var Expenses = function Expenses(props) {
             key: expense.name,
             expenseName: expense.name,
             expenseCost: expense.cost,
-            handleDeleteExpense: props.handleDeleteExpense,
-            handleEditExpenseModal: props.handleEditExpenseModal
+            handleDeleteExpense: props.handleDeleteExpense
           });
         })
       )
@@ -380,17 +376,6 @@ var Expense = function Expense(props) {
   return React.createElement(
     'tr',
     null,
-    React.createElement(
-      'td',
-      { className: 'expense-edit-btn' },
-      React.createElement(
-        'button',
-        { className: 'btn btn-secondary', onClick: function onClick(e) {
-            props.handleEditExpenseModal({ name: props.expenseName, cost: props.expenseCost });
-          } },
-        'Edit'
-      )
-    ),
     React.createElement(
       'td',
       { className: 'expense-name' },

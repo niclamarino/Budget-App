@@ -3,7 +3,7 @@ class BudgetApp extends React.Component {
     super(props)
     this.handleAddExpense = this.handleAddExpense.bind(this)
     this.handleDeleteExpense = this.handleDeleteExpense.bind(this)
-    this.handleEditExpenseModal = this.handleEditExpenseModal.bind(this)
+    // this.handleEditExpenseModal = this.handleEditExpenseModal.bind(this)
     this.handleAddBudget = this.handleAddBudget.bind(this)
     this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
     this.state = {
@@ -46,9 +46,9 @@ class BudgetApp extends React.Component {
 
   }
 // handleEditExpenseModal =====================================
-  handleEditExpenseModal(expenseToEdit) {
-    console.log(expenseToEdit);
-  }
+  // handleEditExpenseModal(expenseToEdit) {
+  //   console.log(expenseToEdit);
+  // }
 
 // handleDeleteExpense =====================================
   handleDeleteExpense(expenseToRemove) {
@@ -218,7 +218,6 @@ const Expenses = (props) => {
                   expenseName = {expense.name}
                   expenseCost = {expense.cost}
                   handleDeleteExpense={props.handleDeleteExpense}
-                  handleEditExpenseModal={props.handleEditExpenseModal}
                 />
               ))
             }
@@ -234,10 +233,10 @@ const Expenses = (props) => {
 const Expense = (props) => {
   return (
     <tr>
-      <td className="expense-edit-btn">
+      {/* <td className="expense-edit-btn">
         <button className="btn btn-secondary" onClick={(e) => {
           props.handleEditExpenseModal({name : props.expenseName, cost : props.expenseCost})}}>Edit</button>
-      </td>
+      </td> */}
       <td className="expense-name">{props.expenseName}</td>
       <td className="expense-cost">${props.expenseCost}</td>
       <td className="expense-remove-btn">
