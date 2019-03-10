@@ -6,6 +6,7 @@ class BudgetApp extends React.Component {
     // this.handleEditExpenseModal = this.handleEditExpenseModal.bind(this)
     this.handleAddBudget = this.handleAddBudget.bind(this)
     this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
+    this.handleResetBudget = this.handleResetBudget.bind(this)
     this.state = {
       totalExpenses : 0,
       expenseList : [],
@@ -64,7 +65,7 @@ class BudgetApp extends React.Component {
     }
     this.setState((prevState) => ({
       expenseList : prevState.expenseList.concat(expense),
-      totalBudget : parseInt(this.state.totalBudget) - parseInt(expense.cost),
+      totalBudget : (parseInt(this.state.totalBudget) || 0) - parseInt(expense.cost),
       totalExpenses : parseInt(this.state.totalExpenses) + parseInt(expense.cost)
     }));
 
@@ -84,6 +85,13 @@ class BudgetApp extends React.Component {
       totalExpenses : parseInt(prevState.totalExpenses) - parseInt(expenseToRemove.cost)
     }));
 
+  }
+
+// handleResetBudget =======================================
+  handleResetBudget() {
+    console.log('resetting...');
+    localStorage.removeItem('totalBudget');
+    this.setState(() => ({ totalBudget : undefined }));
   }
 
 // handleAddBudget =========================================
@@ -113,7 +121,8 @@ class BudgetApp extends React.Component {
           handleAddBudget={this.handleAddBudget}
           handleAdjustBudget={this.handleAdjustBudget}
           handleAddExpense={this.handleAddExpense}
-          // hasBudget={this.state.totalBudget>0}
+          handleResetBudget={this.handleResetBudget}
+          hasBudget={this.state.hasBudget}
         />
         <Expenses
           expenseList={this.state.expenseList}
@@ -127,71 +136,42 @@ class BudgetApp extends React.Component {
 
 // Header ==========================================
 const Header = (props) => {
+  // make budget text red if budget is negative
   const danger = props.totalBudget < 0 ? "danger" : ""
   return (
     <header>
       <div className="container">
         <div className="header-left">
-          <EnterBudget
-            handleAddBudget={props.handleAddBudget}
-            // handleAdjustBudget={props.handleAdjustBudget}
-            totalBudget={props.totalBudget}
-          />
+          {
+            !localStorage.getItem('totalBudget') ?
+              <EnterBudget
+                handleAddBudget={props.handleAddBudget}
+                totalBudget={props.totalBudget}
+              />
+              :
+              <AdjustBudget
+                handleAdjustBudget={props.handleAdjustBudget}
+              />
+          }
           <AddExpense
             handleAddExpense={props.handleAddExpense}
-            // hasBudget={props.hasBudget}
           />
         </div>
         <div className="header-right">
-          <h1>Budget: $<span className={danger}>{props.totalBudget || "0"}</span></h1>
+          <div className="budget-display">
+            <h1>Budget: $<span className={danger}>{props.totalBudget || "0"}</span></h1>
+            {
+              props.totalBudget !== undefined && <button className="btn btn-danger reset-budget-btn" onClick={(e => {
+                props.handleResetBudget();
+              })} >Clear Budget</button>
+            }
+          </div>
           <h2>Total Expenses: ${props.totalExpenses}</h2>
         </div>
       </div>
     </header>
   );
 };
-
-// EnterBudget =====================================
-// class EnterBudget extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.handleAddBudget = this.handleAddBudget.bind(this);
-//     this.handleAdjustBudget=this.handleAdjustBudget.bind(this);
-//     //todo error state
-//   }
-//   handleAddBudget(e) {
-//     e.preventDefault();
-//     const budget = e.target.elements.budget.value
-//     //todo error handling
-//     this.props.handleAddBudget(budget);
-//     e.target.elements.budget.value='';
-//     this.setState(() => ({ hasBudget: true }));
-//   }
-//   handleAdjustBudget(e) {
-//     e.preventDefault();
-//     const amount = e.target.elements.adjustment.value;
-//     this.props.handleAdjustBudget(amount);
-//     e.target.elements.adjustment.value='';
-//   }
-//   render() {
-//     return (
-//       <div> { /*todo*/}
-//         <form>
-//           <label>Add to or Subtract from Budget</label>
-//           <input className="cost-input" type="number" name="adjustment" placeholder="+/-" />
-//           <button className="btn btn-dark">Submit</button>
-//           {/* <button className="btn btn-danger">Reset</button> */}
-//         </form>
-//         <form onSubmit={this.handleAddBudget}>
-//           <label>Enter Budget</label>
-//           <input  className="cost-input" type="number" name="budget" min="1" placeholder="$" />
-//           <button className="btn btn-dark">Submit</button>
-//         </form>
-//     </div>
-//     );
-//   }
-// }
-
 
 // EnterBudget =====================================
 class EnterBudget extends React.Component {
@@ -209,10 +189,10 @@ class EnterBudget extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="enter-budget">
         <form onSubmit={this.handleAddBudget}>
           <label>Enter Budget</label>
-          <input className="cost-input" type="number" name="budget" min="1" placeholder="$" />
+          <input className="budget-input" type="number" name="budget" min="1" placeholder="$" />
           <button className="btn btn-dark">Submit</button>
         </form>
       </div>
@@ -234,11 +214,11 @@ class AdjustBudget extends React.Component {
   }
   render() {
     return (
-      <div>
+      <div className="adjustBudget">
         <form onSubmit={this.handleAdjustBudget}>
-          <label>Add to or Subtract from Budget</label>
-          <input type="number" name="adjustment" placeholder="+/-" />
-          <button>Submit</button>
+          <label>+/- Budget</label>
+          <input type="number" name="adjustment" placeholder="ex. 45 or -45" />
+          <button className="btn btn-dark">Submit</button>
         </form>
       </div>
     );
