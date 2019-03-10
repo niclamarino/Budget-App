@@ -9,7 +9,7 @@ class BudgetApp extends React.Component {
     this.state = {
       totalExpenses : 0,
       expenseList : [],
-      totalBudget : 0,
+      totalBudget : undefined,
     };
   }
 // lifecycle hooks ==========================================
@@ -127,7 +127,7 @@ const Header = (props) => {
           />
         </div>
         <div className="header-right">
-          <h1>Budget: $<span className={danger}>{props.totalBudget}</span></h1>
+          <h1>Budget: $<span className={danger}>{props.totalBudget || "0"}</span></h1>
           <h2>Total Expenses: ${props.totalExpenses}</h2>
         </div>
       </div>
