@@ -96,6 +96,9 @@ class BudgetApp extends React.Component {
 
 // handleAddBudget =========================================
   handleAddBudget(budget) {
+    if (!budget) {
+      return 'Enter a budget of at least $1';
+    }
     if (parseInt(budget) > 0) {
       this.setState(() => ({ totalBudget : budget }));
     }
@@ -104,6 +107,9 @@ class BudgetApp extends React.Component {
 
 // handleAddBudget =========================================
   handleAdjustBudget(amount) {
+    if (!amount) {
+      return 'Enter the amount you wish to add or subtract from your current budget';
+    }
     this.setState(() => {
       return {
         totalBudget : parseInt(this.state.totalBudget) + parseInt(amount)
@@ -122,7 +128,6 @@ class BudgetApp extends React.Component {
           handleAdjustBudget={this.handleAdjustBudget}
           handleAddExpense={this.handleAddExpense}
           handleResetBudget={this.handleResetBudget}
-          hasBudget={this.state.hasBudget}
         />
         <Expenses
           expenseList={this.state.expenseList}
@@ -178,13 +183,15 @@ class EnterBudget extends React.Component {
   constructor(props) {
     super(props)
     this.handleAddBudget = this.handleAddBudget.bind(this)
-    //todo error state
+    this.state = {
+      error : undefined
+    }
   }
   handleAddBudget(e) {
     e.preventDefault();
     const budget = e.target.elements.budget.value
-    //todo error handling
-    this.props.handleAddBudget(budget);
+    const error = this.props.handleAddBudget(budget);
+    this.setState(() => ({ error }));
     e.target.elements.budget.value=''
   }
   render() {
@@ -195,6 +202,7 @@ class EnterBudget extends React.Component {
           <input className="budget-input" type="number" name="budget" min="1" placeholder="$" />
           <button className="btn btn-dark">Submit</button>
         </form>
+        {this.state.error && <p class="error-msg text-center">{this.state.error}</p>}
       </div>
     );
   }
@@ -203,13 +211,17 @@ class EnterBudget extends React.Component {
 // AdjustBudget =====================================
 class AdjustBudget extends React.Component {
   constructor(props) {
-    super(props)
-    this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
+    super(props);
+    this.handleAdjustBudget = this.handleAdjustBudget.bind(this);
+    this.state = {
+      error : undefined
+    };
   }
   handleAdjustBudget(e) {
     e.preventDefault();
     const amount = e.target.elements.adjustment.value;
-    this.props.handleAdjustBudget(amount);
+    const error = this.props.handleAdjustBudget(amount);
+    this.setState(() => ({ error }));
     e.target.elements.adjustment.value=''
   }
   render() {
@@ -220,6 +232,7 @@ class AdjustBudget extends React.Component {
           <input type="number" name="adjustment" placeholder="ex. 45 or -45" />
           <button className="btn btn-dark">Submit</button>
         </form>
+        {this.state.error && <p class="error-msg text-center">{this.state.error}</p>}
       </div>
     );
   }
