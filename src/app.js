@@ -97,6 +97,7 @@ class BudgetApp extends React.Component {
           handleAddBudget={this.handleAddBudget}
           handleAdjustBudget={this.handleAdjustBudget}
           handleAddExpense={this.handleAddExpense}
+          // hasBudget={this.state.totalBudget>0}
         />
         <Expenses
           expenseList={this.state.expenseList}
@@ -117,11 +118,12 @@ const Header = (props) => {
         <div className="header-left">
           <EnterBudget
             handleAddBudget={props.handleAddBudget}
-            handleAdjustBudget={props.handleAdjustBudget}
+            // handleAdjustBudget={props.handleAdjustBudget}
             totalBudget={props.totalBudget}
           />
           <AddExpense
             handleAddExpense={props.handleAddExpense}
+            // hasBudget={props.hasBudget}
           />
         </div>
         <div className="header-right">
@@ -134,14 +136,52 @@ const Header = (props) => {
 };
 
 // EnterBudget =====================================
+// class EnterBudget extends React.Component {
+//   constructor(props) {
+//     super(props)
+//     this.handleAddBudget = this.handleAddBudget.bind(this);
+//     this.handleAdjustBudget=this.handleAdjustBudget.bind(this);
+//     //todo error state
+//   }
+//   handleAddBudget(e) {
+//     e.preventDefault();
+//     const budget = e.target.elements.budget.value
+//     //todo error handling
+//     this.props.handleAddBudget(budget);
+//     e.target.elements.budget.value='';
+//     this.setState(() => ({ hasBudget: true }));
+//   }
+//   handleAdjustBudget(e) {
+//     e.preventDefault();
+//     const amount = e.target.elements.adjustment.value;
+//     this.props.handleAdjustBudget(amount);
+//     e.target.elements.adjustment.value='';
+//   }
+//   render() {
+//     return (
+//       <div> { /*todo*/}
+//         <form>
+//           <label>Add to or Subtract from Budget</label>
+//           <input className="cost-input" type="number" name="adjustment" placeholder="+/-" />
+//           <button className="btn btn-dark">Submit</button>
+//           {/* <button className="btn btn-danger">Reset</button> */}
+//         </form>
+//         <form onSubmit={this.handleAddBudget}>
+//           <label>Enter Budget</label>
+//           <input  className="cost-input" type="number" name="budget" min="1" placeholder="$" />
+//           <button className="btn btn-dark">Submit</button>
+//         </form>
+//     </div>
+//     );
+//   }
+// }
+
+
+// EnterBudget =====================================
 class EnterBudget extends React.Component {
   constructor(props) {
     super(props)
-    this.handleAddBudget = this.handleAddBudget.bind(this);
-    this.handleAdjustBudget=this.handleAdjustBudget.bind(this);
-    this.state = {
-      hasBudget : false
-    }
+    this.handleAddBudget = this.handleAddBudget.bind(this)
     //todo error state
   }
   handleAddBudget(e) {
@@ -149,37 +189,48 @@ class EnterBudget extends React.Component {
     const budget = e.target.elements.budget.value
     //todo error handling
     this.props.handleAddBudget(budget);
-    e.target.elements.budget.value='';
-    this.setState(() => ({ hasBudget: true }));
+    e.target.elements.budget.value=''
+  }
+  render() {
+    return (
+      <div>
+        <form onSubmit={this.handleAddBudget}>
+          <label>Enter Budget</label>
+          <input className="cost-input" type="number" name="budget" min="1" placeholder="$" />
+          <button className="btn btn-dark">Submit</button>
+        </form>
+      </div>
+    );
+  }
+}
+
+// AdjustBudget =====================================
+class AdjustBudget extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
   }
   handleAdjustBudget(e) {
     e.preventDefault();
     const amount = e.target.elements.adjustment.value;
     this.props.handleAdjustBudget(amount);
-    e.target.elements.adjustment.value='';
+    e.target.elements.adjustment.value=''
   }
   render() {
     return (
       <div>
-      {
-        this.state.hasBudget ?
-        <form>
-            <label>Add to or Subtract from Budget</label>
-            <input className="cost-input" type="number" name="adjustment" placeholder="+/-" />
-            <button className="btn btn-dark">Submit</button>
-            {/* <button className="btn btn-danger">Reset</button> */}
+        <form onSubmit={this.handleAdjustBudget}>
+          <label>Add to or Subtract from Budget</label>
+          <input type="number" name="adjustment" placeholder="+/-" />
+          <button>Submit</button>
         </form>
-        :
-        <form onSubmit={this.handleAddBudget}>
-            <label>Enter Budget</label>
-            <input  className="cost-input" type="number" name="budget" min="1" placeholder="$" />
-            <button className="btn btn-dark">Submit</button>
-        </form>
-      }
-    </div>
+      </div>
     );
   }
 }
+
+
+
 
 // AddExpense ======================================
 class AddExpense extends React.Component {
@@ -206,10 +257,10 @@ class AddExpense extends React.Component {
     return (
       <div className="add-expense">
         <form onSubmit={this.handleAddExpense}>
-            <label>Add an Expense</label>
-            <input type="text" name="name" placeholder="Expense Name"/>
-            <input  className="cost-input" type="number" name="cost" min="1" placeholder="$"/>
-            <button className="btn btn-dark">Submit</button>
+          <label>Add an Expense</label>
+          <input type="text" name="name" placeholder="Expense Name"/>
+          <input  className="cost-input" type="number" name="cost" min="1" placeholder="$"/>
+          <button className="btn btn-dark">Submit</button>
         </form>
          {this.state.error && <p class="error-msg text-center">{this.state.error}</p>}
       </div>
