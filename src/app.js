@@ -18,8 +18,18 @@ class BudgetApp extends React.Component {
     try {
       const json = localStorage.getItem('expenseList');
       const expenseList = JSON.parse(json);
+      const stringBudget = localStorage.getItem('totalBudget')
+      const totalBudget = parseInt(stringBudget);
+      const stringTotalExpenses = localStorage.getItem('totalExpenses');
+      const totalExpenses = parseInt(stringTotalExpenses);
       if (expenseList) {
         this.setState(() => ({ expenseList }));
+      }
+      if (totalBudget) {
+        this.setState(() => ({ totalBudget }));
+      }
+      if (totalExpenses) {
+        this.setState(() => ({ totalExpenses }));
       }
     } catch (e) {
         // Do nothing
@@ -31,6 +41,12 @@ class BudgetApp extends React.Component {
     if (prevState.expenseList.length !== this.state.expenseList.length) {
       const json = JSON.stringify(this.state.expenseList);
       localStorage.setItem('expenseList', json);
+    }
+    if (prevState.totalBudget !== this.state.totalBudget) {
+      localStorage.setItem('totalBudget', this.state.totalBudget);
+    }
+    if (prevState.totalExpenses !== this.state.totalExpenses) {
+      localStorage.setItem('totalExpenses', this.state.totalExpenses);
     }
   }
   componentWillUnmount() {
