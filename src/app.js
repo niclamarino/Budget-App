@@ -143,7 +143,7 @@ const Header = (props) => {
       <div className="container">
         <div className="header-left">
           {
-            !localStorage.getItem('totalBudget') ?
+            (!props.totalBudget) ?
               <EnterBudget
                 handleAddBudget={props.handleAddBudget}
                 totalBudget={props.totalBudget}
