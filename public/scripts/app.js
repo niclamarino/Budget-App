@@ -21,6 +21,8 @@ var BudgetApp = function (_React$Component) {
     // this.handleEditExpenseModal = this.handleEditExpenseModal.bind(this)
     _this.handleAddBudget = _this.handleAddBudget.bind(_this);
     _this.handleAdjustBudget = _this.handleAdjustBudget.bind(_this);
+    _this.handleResetBudget = _this.handleResetBudget.bind(_this);
+    _this.handleClearAllExpenses = _this.handleClearAllExpenses.bind(_this);
     _this.state = {
       totalExpenses: 0,
       expenseList: [],
@@ -102,11 +104,23 @@ var BudgetApp = function (_React$Component) {
       this.setState(function (prevState) {
         return {
           expenseList: prevState.expenseList.concat(expense),
-          totalBudget: parseInt(_this2.state.totalBudget) - parseInt(expense.cost),
+          totalBudget: (parseInt(_this2.state.totalBudget) || 0) - parseInt(expense.cost),
           totalExpenses: parseInt(_this2.state.totalExpenses) + parseInt(expense.cost)
         };
       });
     }
+    // handleClearAllExpenses =====================================
+
+  }, {
+    key: 'handleClearAllExpenses',
+    value: function handleClearAllExpenses() {
+      console.log('clearing expense list');
+      localStorage.removeItem('expenseList');
+      this.setState(function () {
+        return { totalExpenses: 0, expenseList: [] };
+      });
+    }
+
     // handleEditExpenseModal =====================================
     // handleEditExpenseModal(expenseToEdit) {
     //   console.log(expenseToEdit);
@@ -128,11 +142,26 @@ var BudgetApp = function (_React$Component) {
       });
     }
 
+    // handleResetBudget =======================================
+
+  }, {
+    key: 'handleResetBudget',
+    value: function handleResetBudget() {
+      console.log('resetting...');
+      localStorage.removeItem('totalBudget');
+      this.setState(function () {
+        return { totalBudget: undefined };
+      });
+    }
+
     // handleAddBudget =========================================
 
   }, {
     key: 'handleAddBudget',
     value: function handleAddBudget(budget) {
+      if (!budget) {
+        return 'Enter a budget of at least $1';
+      }
       if (parseInt(budget) > 0) {
         this.setState(function () {
           return { totalBudget: budget };
@@ -148,6 +177,9 @@ var BudgetApp = function (_React$Component) {
     value: function handleAdjustBudget(amount) {
       var _this3 = this;
 
+      if (!amount) {
+        return 'Enter the amount you wish to add or subtract from your current budget';
+      }
       this.setState(function () {
         return {
           totalBudget: parseInt(_this3.state.totalBudget) + parseInt(amount)
@@ -168,13 +200,14 @@ var BudgetApp = function (_React$Component) {
           totalExpenses: this.state.totalExpenses,
           handleAddBudget: this.handleAddBudget,
           handleAdjustBudget: this.handleAdjustBudget,
-          handleAddExpense: this.handleAddExpense
-          // hasBudget={this.state.totalBudget>0}
+          handleAddExpense: this.handleAddExpense,
+          handleResetBudget: this.handleResetBudget
         }),
         React.createElement(Expenses, {
           expenseList: this.state.expenseList,
           handleDeleteExpense: this.handleDeleteExpense,
-          handleEditExpenseModal: this.handleEditExpenseModal
+          handleEditExpenseModal: this.handleEditExpenseModal,
+          handleClearAllExpenses: this.handleClearAllExpenses
         })
       );
     }
@@ -187,6 +220,7 @@ var BudgetApp = function (_React$Component) {
 
 
 var Header = function Header(props) {
+  // make budget text red if budget is negative
   var danger = props.totalBudget < 0 ? "danger" : "";
   return React.createElement(
     'header',
@@ -197,27 +231,38 @@ var Header = function Header(props) {
       React.createElement(
         'div',
         { className: 'header-left' },
-        React.createElement(EnterBudget, {
-          handleAddBudget: props.handleAddBudget
-          // handleAdjustBudget={props.handleAdjustBudget}
-          , totalBudget: props.totalBudget
+        !props.totalBudget ? React.createElement(EnterBudget, {
+          handleAddBudget: props.handleAddBudget,
+          totalBudget: props.totalBudget
+        }) : React.createElement(AdjustBudget, {
+          handleAdjustBudget: props.handleAdjustBudget
         }),
         React.createElement(AddExpense, {
           handleAddExpense: props.handleAddExpense
-          // hasBudget={props.hasBudget}
         })
       ),
       React.createElement(
         'div',
         { className: 'header-right' },
         React.createElement(
-          'h1',
-          null,
-          'Budget: $',
+          'div',
+          { className: 'budget-display' },
           React.createElement(
-            'span',
-            { className: danger },
-            props.totalBudget || "0"
+            'h1',
+            null,
+            'Budget: $',
+            React.createElement(
+              'span',
+              { className: danger },
+              props.totalBudget || "0"
+            )
+          ),
+          props.totalBudget !== undefined && React.createElement(
+            'button',
+            { className: 'btn btn-danger reset-budget-btn', onClick: function onClick(e) {
+                props.handleResetBudget();
+              } },
+            'Clear Budget'
           )
         ),
         React.createElement(
@@ -232,48 +277,6 @@ var Header = function Header(props) {
 };
 
 // EnterBudget =====================================
-// class EnterBudget extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.handleAddBudget = this.handleAddBudget.bind(this);
-//     this.handleAdjustBudget=this.handleAdjustBudget.bind(this);
-//     //todo error state
-//   }
-//   handleAddBudget(e) {
-//     e.preventDefault();
-//     const budget = e.target.elements.budget.value
-//     //todo error handling
-//     this.props.handleAddBudget(budget);
-//     e.target.elements.budget.value='';
-//     this.setState(() => ({ hasBudget: true }));
-//   }
-//   handleAdjustBudget(e) {
-//     e.preventDefault();
-//     const amount = e.target.elements.adjustment.value;
-//     this.props.handleAdjustBudget(amount);
-//     e.target.elements.adjustment.value='';
-//   }
-//   render() {
-//     return (
-//       <div> { /*todo*/}
-//         <form>
-//           <label>Add to or Subtract from Budget</label>
-//           <input className="cost-input" type="number" name="adjustment" placeholder="+/-" />
-//           <button className="btn btn-dark">Submit</button>
-//           {/* <button className="btn btn-danger">Reset</button> */}
-//         </form>
-//         <form onSubmit={this.handleAddBudget}>
-//           <label>Enter Budget</label>
-//           <input  className="cost-input" type="number" name="budget" min="1" placeholder="$" />
-//           <button className="btn btn-dark">Submit</button>
-//         </form>
-//     </div>
-//     );
-//   }
-// }
-
-
-// EnterBudget =====================================
 
 var EnterBudget = function (_React$Component2) {
   _inherits(EnterBudget, _React$Component2);
@@ -284,7 +287,9 @@ var EnterBudget = function (_React$Component2) {
     var _this4 = _possibleConstructorReturn(this, (EnterBudget.__proto__ || Object.getPrototypeOf(EnterBudget)).call(this, props));
 
     _this4.handleAddBudget = _this4.handleAddBudget.bind(_this4);
-    //todo error state
+    _this4.state = {
+      error: undefined
+    };
     return _this4;
   }
 
@@ -293,8 +298,10 @@ var EnterBudget = function (_React$Component2) {
     value: function handleAddBudget(e) {
       e.preventDefault();
       var budget = e.target.elements.budget.value;
-      //todo error handling
-      this.props.handleAddBudget(budget);
+      var error = this.props.handleAddBudget(budget);
+      this.setState(function () {
+        return { error: error };
+      });
       e.target.elements.budget.value = '';
     }
   }, {
@@ -302,7 +309,7 @@ var EnterBudget = function (_React$Component2) {
     value: function render() {
       return React.createElement(
         'div',
-        null,
+        { className: 'enter-budget' },
         React.createElement(
           'form',
           { onSubmit: this.handleAddBudget },
@@ -311,12 +318,17 @@ var EnterBudget = function (_React$Component2) {
             null,
             'Enter Budget'
           ),
-          React.createElement('input', { className: 'cost-input', type: 'number', name: 'budget', min: '1', placeholder: '$' }),
+          React.createElement('input', { className: 'budget-input', type: 'number', name: 'budget', min: '1', placeholder: '$' }),
           React.createElement(
             'button',
             { className: 'btn btn-dark' },
             'Submit'
           )
+        ),
+        this.state.error && React.createElement(
+          'p',
+          { 'class': 'error-msg text-center' },
+          this.state.error
         )
       );
     }
@@ -337,6 +349,9 @@ var AdjustBudget = function (_React$Component3) {
     var _this5 = _possibleConstructorReturn(this, (AdjustBudget.__proto__ || Object.getPrototypeOf(AdjustBudget)).call(this, props));
 
     _this5.handleAdjustBudget = _this5.handleAdjustBudget.bind(_this5);
+    _this5.state = {
+      error: undefined
+    };
     return _this5;
   }
 
@@ -345,7 +360,10 @@ var AdjustBudget = function (_React$Component3) {
     value: function handleAdjustBudget(e) {
       e.preventDefault();
       var amount = e.target.elements.adjustment.value;
-      this.props.handleAdjustBudget(amount);
+      var error = this.props.handleAdjustBudget(amount);
+      this.setState(function () {
+        return { error: error };
+      });
       e.target.elements.adjustment.value = '';
     }
   }, {
@@ -353,21 +371,26 @@ var AdjustBudget = function (_React$Component3) {
     value: function render() {
       return React.createElement(
         'div',
-        null,
+        { className: 'adjustBudget' },
         React.createElement(
           'form',
           { onSubmit: this.handleAdjustBudget },
           React.createElement(
             'label',
             null,
-            'Add to or Subtract from Budget'
+            'Adjust Budget (+/-)'
           ),
-          React.createElement('input', { type: 'number', name: 'adjustment', placeholder: '+/-' }),
+          React.createElement('input', { type: 'number', name: 'adjustment', placeholder: 'ex. 45 or -45' }),
           React.createElement(
             'button',
-            null,
+            { className: 'btn btn-dark' },
             'Submit'
           )
+        ),
+        this.state.error && React.createElement(
+          'p',
+          { 'class': 'error-msg text-center' },
+          this.state.error
         )
       );
     }
@@ -453,8 +476,15 @@ var Expenses = function Expenses(props) {
     { id: 'expenses', className: 'container' },
     React.createElement(
       'h2',
-      { className: 'text-center text-muted' },
+      { className: ' text-center text-muted' },
       'Expenses'
+    ),
+    props.expenseList.length > 0 && React.createElement(
+      'button',
+      { className: 'clear-all-expenses-btn btn btn-danger', onClick: function onClick(e) {
+          props.handleClearAllExpenses();
+        } },
+      'Clear All Expenses'
     ),
     props.expenseList.length > 0 ? React.createElement(
       'table',

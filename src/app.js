@@ -1,12 +1,13 @@
 class BudgetApp extends React.Component {
   constructor(props) {
-    super(props)
-    this.handleAddExpense = this.handleAddExpense.bind(this)
-    this.handleDeleteExpense = this.handleDeleteExpense.bind(this)
+    super(props);
+    this.handleAddExpense = this.handleAddExpense.bind(this);
+    this.handleDeleteExpense = this.handleDeleteExpense.bind(this);
     // this.handleEditExpenseModal = this.handleEditExpenseModal.bind(this)
-    this.handleAddBudget = this.handleAddBudget.bind(this)
-    this.handleAdjustBudget = this.handleAdjustBudget.bind(this)
-    this.handleResetBudget = this.handleResetBudget.bind(this)
+    this.handleAddBudget = this.handleAddBudget.bind(this);
+    this.handleAdjustBudget = this.handleAdjustBudget.bind(this);
+    this.handleResetBudget = this.handleResetBudget.bind(this);
+    this.handleClearAllExpenses = this.handleClearAllExpenses.bind(this);
     this.state = {
       totalExpenses : 0,
       expenseList : [],
@@ -70,6 +71,13 @@ class BudgetApp extends React.Component {
     }));
 
   }
+// handleClearAllExpenses =====================================
+  handleClearAllExpenses() {
+    console.log('clearing expense list');
+    localStorage.removeItem('expenseList');
+    this.setState(()=>({ totalExpenses : 0, expenseList : [] }));
+  }
+
 // handleEditExpenseModal =====================================
   // handleEditExpenseModal(expenseToEdit) {
   //   console.log(expenseToEdit);
@@ -133,6 +141,7 @@ class BudgetApp extends React.Component {
           expenseList={this.state.expenseList}
           handleDeleteExpense={this.handleDeleteExpense}
           handleEditExpenseModal={this.handleEditExpenseModal}
+          handleClearAllExpenses={this.handleClearAllExpenses}
         />
       </div>
     );
@@ -228,7 +237,7 @@ class AdjustBudget extends React.Component {
     return (
       <div className="adjustBudget">
         <form onSubmit={this.handleAdjustBudget}>
-          <label>+/- Budget</label>
+          <label>Adjust Budget (+/-)</label>
           <input type="number" name="adjustment" placeholder="ex. 45 or -45" />
           <button className="btn btn-dark">Submit</button>
         </form>
@@ -281,7 +290,12 @@ class AddExpense extends React.Component {
 const Expenses = (props) => {
   return (
     <section id="expenses" className="container">
-      <h2 className="text-center text-muted">Expenses</h2>
+      <h2 className=" text-center text-muted">Expenses</h2>
+      { props.expenseList.length>0 &&
+        <button className="clear-all-expenses-btn btn btn-danger" onClick={(e) => {
+          props.handleClearAllExpenses();
+        }}>Clear All Expenses</button>
+      }
       {
         props.expenseList.length>0 ? <table className="expense table table-striped table-bordered table-hover">
           <tbody>
